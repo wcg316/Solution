@@ -34,6 +34,9 @@ void write(int x) {
 signed main() {
 	int n = read(), m = read();
 	vector<int> a, b;
+	// 為了方便起見，在此刻意讓 n 較大， m 較小
+	// a[] 固定是較長的陣列
+	// 而 b[] 是較短的陣列
 	if (n < m) {
 		a.resize(m);
 		b.resize(n);
@@ -41,6 +44,7 @@ signed main() {
 			_b = read();
 		for (int &_a : a)
 			_a = read();
+		// 記得交換，讓 n 是比較大的
 		swap(n, m);
 	} else {
 		a.resize(n);
@@ -50,10 +54,14 @@ signed main() {
 		for (int &_b : b)
 			_b = read();
 	}
+	// 開始尋找最大區間內積
 	int maxSum = INT_MIN;
+	// 記得外層要從 -m + 1 開始找，而不是 0
+	// 不然會漏掉 b[] 尾部 + a[] 頭部的配對
 	for (int i = -m + 1; i < n; i++) {
 		int sum = 0;
 		for (int j = 0; j < m && j + i < n; j++) {
+			// 避免 i 太小導致超出陣列範圍
 			if (j + i < 0)
 				continue;
 			sum += a[j + i] * b[j];
@@ -61,6 +69,7 @@ signed main() {
 			sum = max(sum, 0);
 		}
 	}
+	// 反轉之後再找一次
 	reverse(a.begin(), a.end());
 	for (int i = -m + 1; i < n; i++) {
 		int sum = 0;
@@ -72,6 +81,7 @@ signed main() {
 			sum = max(sum, 0);
 		}
 	}
+	// 輸出答案
 	write(maxSum);
 	return 0;
 }
