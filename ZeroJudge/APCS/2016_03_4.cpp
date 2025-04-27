@@ -41,7 +41,7 @@ signed main() {
     memset(visited, false, sizeof(visited));
     // 建立樹結構，此處以二維陣列模擬
     // tree[k][0] 是 k 的父節點，後面的都是子節點
-	n = read();
+    n = read();
     tree.resize(n, vector<int>(1, -1));
     for (int i = 0; i < n - 1; i++) {
         int a = read(), b = read();
