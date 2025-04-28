@@ -25,12 +25,21 @@ void write(int x) {
 signed main() {
 	int n = read();
     vector<pair<int, int>> coords(n);
-	for (auto &coord :coords) coord = {read(), read()};
+	for (auto &coord :coords)
+        coord = {read(), read()};
+    // 依照 x 座標做排序
     sort(coords.begin(), coords.end());
+    // 開始尋找 LIS 的長度
     vector<int> dp;
     for (auto &coord : coords) {
-        if (dp.empty() || coord.second >= dp.back()) dp.push_back(coord.second);
-        else *upper_bound(dp.begin(), dp.end(), coord.second) = coord.second;
+        // 由於題目要求的是 「不小於」
+        // 所以記得改用 >=
+        // 二分搜也改用 upper_bound
+        // 確保不會跳過選取 y 相等的座標
+        if (dp.empty() || coord.second >= dp.back())
+        	dp.push_back(coord.second);
+        else
+        	*upper_bound(dp.begin(), dp.end(), coord.second) = coord.second;
     }
     write(dp.size());
 	return 0;
