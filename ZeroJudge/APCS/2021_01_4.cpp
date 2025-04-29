@@ -30,7 +30,7 @@ void write(int x) {
 signed main() {
     int n = read();
     vector<pair<int, int>> coords(n);
-	for (auto &coord :coords)
+    for (auto &coord :coords)
         coord = {read(), read()};
     // 依照 x 座標做排序
     sort(coords.begin(), coords.end());
