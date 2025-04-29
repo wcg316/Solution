@@ -33,23 +33,23 @@ void write(int x) {
 }
 
 signed main() {
-    int n = read(), l = read();
-    vector<int> cutPoints(n);
+	int n = read(), l = read();
+	vector<int> cutPoints(n);
 	set<int> s;
 	// 先加入最初的端點，也就是木棍的頭尾
-    s.insert(0), s.insert(l);
+	s.insert(0), s.insert(l);
 	// 讀取測資
-    while (n--) {
-        int cutPoint = read(), idx = read() - 1;
-        cutPoints[idx] = cutPoint;
-    }
-    int ans = 0;
-    for (auto &c : cutPoints) {
-        s.insert(c);
-        auto it = s.find(c);
+	while (n--) {
+		int cutPoint = read(), idx = read() - 1;
+		cutPoints[idx] = cutPoint;
+	}
+	int ans = 0;
+	for (auto &c : cutPoints) {
+		s.insert(c);
+		auto it = s.find(c);
 		// 利用 next 和 prev 直接找到前後端點，並求得長度
-        ans += *next(it) - *prev(it);
-    }
-    write(ans);
-    return 0;
+		ans += *next(it) - *prev(it);
+	}
+	write(ans);
+	return 0;
 }
