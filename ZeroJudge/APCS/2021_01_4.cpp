@@ -28,7 +28,7 @@ void write(int x) {
 }
 
 signed main() {
-	int n = read();
+    int n = read();
     vector<pair<int, int>> coords(n);
 	for (auto &coord :coords)
         coord = {read(), read()};
