@@ -49,25 +49,13 @@ bool cmp(bus &a, bus &b) {
 signed main() {
 	int n = read(), m = read(), p = read();
     vector<bus> routes(n);
-    for (auto &route : routes) {
+    for (auto &route : routes)
         route.s = read();
-        if (route.s == 0)
-            route.w = 1;
-    }
     for (auto &route : routes)
         route.e = read();
     sort(routes.begin(), routes.end(), cmp);
     for (auto &route : routes) {
         int l = 0, r = n - 1;
-        while (l < r) {
-            int mid = (l + r + 1) >> 1;
-            if (route.s <= routes[mid].e && routes[mid].e < route.e)
-                l = mid;
-            else
-                r = mid - 1;
-        }
-        bus lastCanTake = routes[l];
-        l = 0, r = n - 1;
         while (l < r) {
             int mid = (l + r) >> 1;
             if (route.s <= routes[mid].e && routes[mid].e < route.e)
@@ -75,8 +63,20 @@ signed main() {
             else
                 l = mid + 1;
         }
-        bus firstCanTake = routes[r];
-        route.w = (lastCanTake.w + firstCanTake.w) % p;
+        int firstCanTake = r;
+        l = 0, r = n - 1;
+        while (l < r) {
+            int mid = (l + r) >> 1;
+            if (route.s <= routes[mid].e && routes[mid].e < route.e)
+                l = mid + 1;
+            else
+                r = mid - 1;
+        }
+        int lastCanTake = l;
+        if (route.s == 0)
+            route.w++;
+        for (int i = firstCanTake; i < lastCanTake; i++)
+            route.w += routes[i].w;
     }
     int ans = 0;
     for (int i = n - 1; routes[i].e >= m; i--) {
