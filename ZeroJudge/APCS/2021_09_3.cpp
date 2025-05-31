@@ -30,10 +30,6 @@ void write(int x) {
 vector<int> a, prefix;
 map<int, int> idx;
 
-bool comp(int &x, int &y) {
-    return a[x] < a[y];
-}
-
 signed main() {
 	int n = read();
     a.resize(n + 1), prefix.resize(n + 1);
@@ -43,10 +39,12 @@ signed main() {
         prefix[i] = prefix[i - 1] + a[i];
         idx[a[i]] = i;
     }
-    int l = 1, r = n;
+	// map 是遞增的，所以最小的點是第一個
     auto it = idx.begin();
+	int l = 1, r = n;
     while (l < r) {
         int m = it++ -> second;
+		// 如果當前最小的點已經被排除了，就依序找第二小的
         while (m < l || m > r)
             m = it++ -> second;
         int leftSum = prefix[m - 1] - prefix[l - 1];
