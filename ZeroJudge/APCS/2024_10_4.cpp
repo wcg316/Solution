@@ -65,7 +65,7 @@ signed main() {
     sort(routes.begin(), routes.end(), cmp);
     for (int i = 1; i <= n; i++) {
         // 第一次二分搜
-        int l = 0, r = n;
+        int l = 1, r = i;
         while (l < r) {
             int mid = (l + r) >> 1;
             // 如果符合條件就往前半縮，才會找到第一個
@@ -77,7 +77,7 @@ signed main() {
         // 取得第一個可以接上這條路線的車的序號
         int firstCanTake = r;
         // 第二次二分搜
-        l = 0, r = n;
+        l = 1, r = i;
         while (l < r) {
             int mid = (l + r) >> 1;
             // 如果符合條件就往後半縮，才會找到最後一個
