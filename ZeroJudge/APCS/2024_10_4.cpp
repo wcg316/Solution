@@ -1,8 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
-#include <climits>
-#include <cstring>
+#include <unordered_map>
 //#define int long long
 //#define getchar getchar_unlocked
 //#define putchar putchar_unlocked
@@ -37,7 +36,7 @@ void write(int x) {
 }
 
 struct bus {
-    int s, e, w = 0;
+    int s, e;
 };
 
 bool cmp(bus &a, bus &b) {
@@ -46,43 +45,50 @@ bool cmp(bus &a, bus &b) {
     return a.e < b.e;
 }
 
+unordered_map<int, int> waysToHere;
+vector<int> prefix;
+vector<bus> routes;
+
 signed main() {
 	int n = read(), m = read(), p = read();
-    vector<bus> routes(n);
-    for (auto &route : routes)
-        route.s = read();
-    for (auto &route : routes)
-        route.e = read();
+    prefix.resize(n + 1);
+    routes.resize(n + 1);
+    prefix[0] = 0;
+    routes[0] = {-1, -1};
+    for (int i = 1; i <= n; i++)
+        routes[i].s = read();
+    for (int i = 1; i <= n; i++)
+        routes[i].e = read();
     sort(routes.begin(), routes.end(), cmp);
-    for (auto &route : routes) {
-        int l = 0, r = n - 1;
+    for (int i = 1; i <= n; i++) {
+        int l = 0, r = n;
         while (l < r) {
             int mid = (l + r) >> 1;
-            if (route.s <= routes[mid].e && routes[mid].e < route.e)
+            if (routes[mid].e >= routes[i].s)
                 r = mid;
             else
                 l = mid + 1;
         }
         int firstCanTake = r;
-        l = 0, r = n - 1;
+        l = 0, r = n;
         while (l < r) {
             int mid = (l + r) >> 1;
-            if (route.s <= routes[mid].e && routes[mid].e < route.e)
+            if (routes[mid].e < routes[i].e)
                 l = mid + 1;
             else
-                r = mid - 1;
+                r = mid;
         }
-        int lastCanTake = l;
-        if (route.s == 0)
-            route.w++;
-        for (int i = firstCanTake; i < lastCanTake; i++)
-            route.w += routes[i].w;
+        int lastCanTake = l - 1;
+        int waysOfThisRoute = 0;
+        if (firstCanTake <= lastCanTake)
+        	waysOfThisRoute = (prefix[lastCanTake] - prefix[firstCanTake - 1] + p) % p;
+        if (routes[i].s == 0)
+            waysOfThisRoute++;
+        if (waysToHere.find(routes[i].e) == waysToHere.end())
+            waysToHere[routes[i].e] = 0;
+        waysToHere[routes[i].e] = (waysOfThisRoute + waysToHere[routes[i].e]) % p;
+        prefix[i] = (waysOfThisRoute + prefix[i - 1]) % p;
     }
-    int ans = 0;
-    for (int i = n - 1; routes[i].e >= m; i--) {
-        if (routes[i].e == m)
-            ans = (ans + routes[i].w) % p;
-    }
-    write(ans);
+    write(waysToHere[m]);
 	return 0;
 }
