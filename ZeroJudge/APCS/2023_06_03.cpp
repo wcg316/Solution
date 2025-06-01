@@ -31,8 +31,7 @@ int getNumberFrom(int idx) {
 	return sequence[idx] * 10 + sequence[idx + 1] - '0' * 11;
 }
 
-loopData L() {
-	int times = sequence[idx++] - '0';
+loopData L(int times) {
 	vector<int> numbers;
 	numbers.reserve(10000);
 	int distSum = 0;
@@ -46,7 +45,7 @@ loopData L() {
 			idx += 2;
 		} else if (ch == 'L') {
 			idx++;
-			loopData insideLoop = L();
+			loopData insideLoop = L(sequence[idx++] - '0');
 			numbers.push_back(insideLoop.beginning);
 			numbers.push_back(insideLoop.ending);
 			result.dist += insideLoop.dist;
@@ -70,6 +69,6 @@ loopData L() {
 
 signed main() {
     sequence = read_line();
-	write(L().dist);
+	write(L(1).dist);
 	return 0;
 }
