@@ -1,8 +1,8 @@
-#include <iostream>
+#include <stdio.h>
 #include <vector>
 #include <algorithm>
 #include <cmath>
-#include <stack>
+#include <string>
 #define int long long
 //#define getchar getchar_unlocked  
 //#define putchar putchar_unlocked
@@ -21,73 +21,54 @@ void write(int x) {
     putchar(x % 10 + '0');
 }
 
+int idx = 0;
 string sequence;
 
-struct loop {
-	bool finished;
-	int times, beginning, ending, dist;
-	vector<int> path;
-	loop(int t) {
-		finished = false;
-		times = t;
-		path.reserve(10000);
-	}
+struct loopData {
+	int beginning, ending, dist;
 };
 
 int getNumberFrom(int idx) {
 	return sequence[idx] * 10 + sequence[idx + 1] - '0' * 11;
 }
 
-signed main() {
-    sequence = read_line();
-	int idx = 0;
-	stack<loop> s;
-	loop *start = new loop(1);
-	s.push(*start);
-	while (!s.empty()) {
-		loop &curr = s.top();
-		if (!curr.finished) {
-			while (idx < sequence.length()) {
-				char ch = sequence[idx];
-				if (ch == 'T') {
-					idx++;
-					int pos = getNumberFrom(idx);
-					curr.path.push_back(pos);
-					idx += 2;
-				} else if (ch == 'L') {
-					idx++;
-					loop *insideLoop = new loop(sequence[idx++] - '0');
-					s.push(*insideLoop);
-					curr = s.top();
-				} else if (ch == 'E') {
-					idx++;
-					curr.finished = true;
-					break;
-				}
-			}
-			curr.beginning = curr.path.front();
-			curr.ending = curr.path.back();
-			int middleMove = 0;
-			for (int i = 0; i < curr.path.size() - 1; i++)
-				middleMove += abs(curr.path[i] - curr.path[i + 1]);
-			curr.dist =
-				(middleMove + curr.dist) * curr.times +
-				abs(curr.path.back() - curr.path.front()) * (curr.times - 1);
-			if (s.size() == 1) {
-				write(curr.dist);
-				return 0;
-			} else if (curr.finished) {
-				int beginning = curr.beginning;
-				int ending = curr.ending;
-				int dist = curr.dist;
-				s.pop();
-				curr = s.top();
-				curr.path.push_back(beginning);
-				curr.path.push_back(ending);
-				curr.dist += 
-					dist - abs(beginning - ending);
-			}
+loopData L(int times) {
+	vector<int> numbers;
+	loopData result;
+	result.dist = 0;
+	while (idx < sequence.length()) {
+		char ch = sequence[idx];
+		if (ch == 'T') {
+			idx++;
+			int pos = getNumberFrom(idx);
+			numbers.push_back(pos);
+			idx += 2;
+		} else if (ch == 'L') {
+			idx++;
+			loopData insideLoop = L(sequence[idx++] - '0');
+			numbers.push_back(insideLoop.beginning);
+			numbers.push_back(insideLoop.ending);
+			result.dist += 
+				insideLoop.dist - abs(insideLoop.beginning - insideLoop.ending);
+		} else if (ch == 'E') {
+			idx++;
+			break;
 		}
 	}
+	result.beginning = numbers.front();
+	result.ending = numbers.back();
+	int i = 0;
+	int middleMove = 0;
+	while (i < numbers.size() - 1)
+		middleMove += abs(numbers[i] - numbers[++i]);
+	result.dist =
+		(middleMove + result.dist) * times +
+		abs(numbers.back() - numbers.front()) * (times - 1);
+	return result;
+}
+
+signed main() {
+    sequence = read_line();
+	write(L(1).dist);
 	return 0;
 }
