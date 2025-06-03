@@ -1,8 +1,9 @@
-#include <iostream>
+#include <stdio.h>
 #include <vector>
 #include <algorithm>
-#include <map>
-//#define int long long
+#include <unordered_map>
+//////////////////////////////////// 記得開 long long ////////////////////////////////////
+#define int long long
 //#define getchar getchar_unlocked  
 //#define putchar putchar_unlocked
 using namespace std;
@@ -32,26 +33,32 @@ void write(int x) {
     putchar(x % 10 + '0');
 }
 
-vector<int> a, prefix;
-map<int, int> idx;
-
 signed main() {
+    // 注意以下的 int 都是 long long
 	int n = read();
-    a.resize(n + 1), prefix.resize(n + 1);
+    // a[] 紀錄數字，排序後用來確認數字大小順序
+    // prefix[] 記錄前綴和，用來快速計算區區間和
+    vector<int> a(n + 1), prefix(n + 1);
+    // idx 記錄每個數字的位置，用來查詢數字原本的位置
+    // key 是數字本身，value 是數字位置
+    unordered_map<int, int> idx;
+    // 初始化
     a[0] = prefix[0] = 0;
     for (int i = 1; i <= n; i++) {
         a[i] = read();
         prefix[i] = prefix[i - 1] + a[i];
+        // a[i] 的位置在 i
         idx[a[i]] = i;
     }
-	// map 是遞增的，所以最小的點是第一個
-    auto it = idx.begin();
+    // 排序，方便後續快速得知最小數字的位置
+    sort(a.begin(), a.end());
+    int i = 1;
 	int l = 1, r = n;
     while (l < r) {
-        int m = it++ -> second;
-		// 如果當前最小的點已經被排除了，就依序找第二小的
+        int m = idx[a[i++]];
+		// 如果當前最小的點已經被排除在區間外了，就依序找第二小的
         while (m < l || m > r)
-            m = it++ -> second;
+            m = idx[a[i++]];
         int leftSum = prefix[m - 1] - prefix[l - 1];
         int rightSum = prefix[r] - prefix[m];
         if (leftSum > rightSum)
@@ -59,6 +66,6 @@ signed main() {
         else
             l = m + 1;
     }
-    write(a[l]);
+    write(prefix[l] - prefix[l - 1]);
 	return 0;
 }
