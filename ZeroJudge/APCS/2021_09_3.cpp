@@ -53,7 +53,7 @@ signed main() {
     // 排序，方便後續快速得知最小數字的位置
     sort(a.begin(), a.end());
 	int l = 1, r = n;
-    for (int i = 1;l < r; i++) {
+    for (int i = 1; l < r; i++) {
         int m = idx[a[i]];
 		// 如果當前最小的點已經被排除在區間外了，就依序找第二小的
         while (m < l || m > r)
