@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
+#include <cstring>
 //#define int long long
 //#define getchar getchar_unlocked  
 //#define putchar putchar_unlocked
@@ -26,15 +27,22 @@ void write(int x) {
     putchar(x % 10 + '0');
 }
 
+int dp[22][150009];
+
 signed main() {
     int n = read(), k = read();
-    vector<int> profits(n);
-    for (int &profit : profits)
-        profit = read();
-    int currSum = 0, maxSum = 0;
-    for (int &profit : profits) {
-        
+    k++;
+    vector<int> profits(n + 1);
+    profits[0] = 0;
+    for (int i = 1; i <= n; i++)
+        profits[i] = read();
+    int ans = 0;
+    for (int i = 1; i <= k; i++) {
+        for (int j = 1; j <= n; j++) {
+            dp[i][j] = max(dp[i][j - 1] + profits[j], dp[i - 1][j - 1]);
+            ans = max(ans, dp[i][j]);
+        }
     }
-    write(maxSum);
+    write(ans);
 	return 0;
 }
