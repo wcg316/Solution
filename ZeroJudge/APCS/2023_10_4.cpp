@@ -7,6 +7,11 @@
 //#define putchar putchar_unlocked
 using namespace std;
 
+///////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////// 下面的 read() 和 write() 是我自訂的讀寫函式 ////////////////////////
+/////////////////////////////// 功能就只是讀取測資和輸出答案 ////////////////////////////////
+////////////////////////////////// 礙眼的話可以摺疊起來 ////////////////////////////////////
+
 inline int read() {
     char ch = getchar();
     while (ch == ' ' || ch == '\n') ch = getchar();
@@ -27,11 +32,12 @@ void write(int x) {
     putchar(x % 10 + '0');
 }
 
-int dp[22][150009];
+int pre[150009], curr[150009];
 
 signed main() {
     int n = read(), k = read();
     k++;
+    memset(pre, 0, sizeof(pre));
     vector<int> profits(n + 1);
     profits[0] = 0;
     for (int i = 1; i <= n; i++)
@@ -39,9 +45,10 @@ signed main() {
     int ans = 0;
     for (int i = 1; i <= k; i++) {
         for (int j = 1; j <= n; j++) {
-            dp[i][j] = max(dp[i][j - 1] + profits[j], dp[i - 1][j - 1]);
-            ans = max(ans, dp[i][j]);
+            curr[j] = max(curr[j - 1] + profits[j], pre[j - 1]);
+            ans = max(ans, curr[j]);
         }
+        swap(pre, curr);
     }
     write(ans);
 	return 0;
