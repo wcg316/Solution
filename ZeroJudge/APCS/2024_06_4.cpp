@@ -2,6 +2,8 @@
 #include <vector>
 #include <algorithm>
 #define OFFSET 2001
+#define idx first
+#define sum second
 //#define int long long
 //#define getchar getchar_unlocked  
 //#define putchar putchar_unlocked
@@ -49,7 +51,15 @@ signed main() {
 	int ans = 0;
 	for (int i = 1; i <= n; i++) {
 		int neededGap = -prefix[i].parityGap;
-		
+		vector<pair<int, int>> &candidates = gapMap[neededGap + OFFSET];
+		int l = 0, r = candidates.size();
+		while (l < r) {
+			int mid = (l + r) >> 1;
+			if (candidates[mid].idx < i)
+				l = mid + 1;
+			else
+				r = mid;
+		}
 	}
 	write(ans);
 	return 0;
