@@ -63,7 +63,7 @@ signed main() {
 	for (int i = n; i >= 1; i--) {
 		suffix[i].sum = suffix[i + 1].sum + a[i];
 		suffix[i].parityGap = suffix[i + 1].parityGap + (a[i] & 1 ? 1 : -1);
-		// 紀錄有哪些位置的後綴奇偶差是這個數字
+		// 紀錄有哪些後綴區間的後綴奇偶差是這個數字
 		// 方便待會直接查表（記得添加偏移）
 		gapMap[suffix[i].parityGap + OFFSET].push_back({i, suffix[i].sum});
 	}
@@ -71,10 +71,10 @@ signed main() {
 	for (int i = 1; i <= n; i++) {
 		// 取得為了平衡奇偶所需的奇偶差
 		int neededGap = -prefix[i].parityGap;
-		// 取得所有具有該奇偶差的位置（記得添加偏移）
+		// 取得所有具有該奇偶差的後綴區間（記得添加偏移）
 		vector<pair<int, int>> &candidates = gapMap[neededGap + OFFSET];
 		// 二分搜尋找第一個不與
-		// 當前前綴範圍重疊的後綴範圍
+		// 當前前綴區間重疊的後綴區間
 		int l = 0, r = candidates.size();
 		while (l < r) {
 			int mid = (l + r) >> 1;
@@ -83,7 +83,7 @@ signed main() {
 			else
 				r = mid;
 		}
-		// 這裡出來的 l 是第一個不合法，會與當前前綴重疊的位置
+		// 這裡出來的 l 是第一個不合法，會與當前前綴重疊的後綴區間
 		// 令上界 r 等於 l，l 重設為 0
 		// 所有 [l, r) 內的元素皆不會與當前前綴重疊
 		r = l, l = 0;
