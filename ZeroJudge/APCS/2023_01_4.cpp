@@ -61,7 +61,9 @@ signed main() {
 		machines.insert(-1);
 	int ans = 0;
 	for (auto &activity : activities) {
-		// 二分搜找到第一臺有空的機器
+		// 找到第一臺有空的機器。
+		// 因為題目要求開始時間大於上一次的結束時間，
+		// 故搜尋的目標不是 beginning 而是 beginning - 1
 		auto it = machines.upper_bound(activity.beginning - 1);
 		// it == .begin() 時，
 		// 代表所有機器結束工作的時間皆大於該活動的起始時間，無法加入排程
