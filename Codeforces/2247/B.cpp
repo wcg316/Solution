@@ -27,11 +27,24 @@ void write(int x) {
     putchar(x % 10 + '0');
 }
 
+inline void write_line(string str) {
+    for (int i = 0; i < str.length(); i++) putchar(str[i]);
+}
+
 signed main() {
     int t = read();
 	while (t--) {
 		int n = read(), k = read(), m = read();
-				
+			if (k > m) {
+                write_line("NO\n");
+            } else {
+                write_line("YES\n");
+                write(m - k + 1);
+                for (int i = 1; i < n; i++) {
+                    write_line(" 1");
+                }
+                putchar('\n');
+            }
 	}
 	return 0;
 }
